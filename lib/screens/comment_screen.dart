@@ -25,7 +25,7 @@ class _CommentScreenState extends State<CommentScreen> {
         isUpvoted: false,
         isDownvoted: false,
       );
-      Navigator.pop(context, newAnswer); // Kembalikan jawaban baru ke layar sebelumnya
+      Navigator.pop(context, newAnswer);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Answer cannot be empty!')),

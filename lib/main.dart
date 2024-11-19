@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 
 void main() {
-  runApp(BrainlyApp());
+  runApp(const BrainlyApp());
 }
 
 class BrainlyApp extends StatelessWidget {
+  const BrainlyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,7 +18,31 @@ class BrainlyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: FutureBuilder<bool>(
+        future: _checkLoginStatus(),
+        builder: (context, snapshot) {
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+
+          if (snapshot.hasData) {
+            if (snapshot.data == true) {
+              return const HomeScreen();
+            } else {
+              return const LoginScreen();
+            }
+          } else {
+            return const Center(child: Text('Error checking login status'));
+          }
+        },
+      ),
     );
+  }
+
+  Future<bool> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
   }
 }

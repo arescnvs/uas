@@ -1,72 +1,93 @@
 import 'package:flutter/material.dart';
-import '../screens/question_screen.dart'; // Import screen untuk pertanyaan
+import 'package:shared_preferences/shared_preferences.dart';
+import '../screens/question_screen.dart';
+import '../screens/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    int crossAxisCount = MediaQuery.of(context).size.width > 600 ? 3 : 2;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5FA),
-      body: SingleChildScrollView( // Membuat halaman scrollable
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center, // Mengubah alignment ke tengah
-                children: [
-                  const Center( // Membungkus teks '505' dalam Center widget
-                    child: Text(
-                      "505",
-                      style: TextStyle(
-                        fontSize: 40, // Membesarkan teks
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 40), // Memberi jarak lebih besar
-                  GridView(
-                    shrinkWrap: true,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Mengurangi jumlah kolom agar item lebih besar
-                      childAspectRatio: 1, // Menjaga rasio item agar lebih persegi
-                      crossAxisSpacing: 20, // Memberi lebih banyak jarak antar kolom
-                      mainAxisSpacing: 20, // Memberi lebih banyak jarak antar baris
-                    ),
-                    children: [
-                      _buildGridItem(context, 'img/mathematics.png', "Matematika"),
-                      _buildGridItem(context, 'img/science.png', "Sains"),
-                      _buildGridItem(context, 'img/book.png', "Bahasa"),
-                      _buildGridItem(context, 'img/musical.png', "Musik"),
-                      _buildGridItem(context, 'img/sport.jpg', "Olahraga"),
-                      _buildGridItem(context, 'img/geo.jpg', "Geografi"),
-                      _buildGridItem(context, 'img/prak.png', "Prakarya"),
-                      _buildGridItem(context, 'img/agama.png', "Agama"),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: const Color(0xFFF5F5FA),
+            floating: true,
+            pinned: false,
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool('isLoggedIn', false);
+                  await prefs.remove('username');
 
-                    ],
-                  ),
-                ],
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  );
+                },
+              ),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Text(
+                "505",
+                style: const TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
-            const SizedBox(height: 20), // Menambah jarak di bagian bawah
-          ],
-        ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            sliver: SliverGrid(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                childAspectRatio: 1,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  List<Map<String, String>> items = [
+                    {'image': 'img/mathematics.png', 'label': "Matematika"},
+                    {'image': 'img/science.png', 'label': "Sains"},
+                    {'image': 'img/book.png', 'label': "Bahasa"},
+                    {'image': 'img/musical.png', 'label': "Musik"},
+                    {'image': 'img/sport.jpg', 'label': "Olahraga"},
+                    {'image': 'img/geo.jpg', 'label': "Geografi"},
+                    {'image': 'img/prak.png', 'label': "Prakarya"},
+                    {'image': 'img/agama.png', 'label': "Agama"},
+                  ];
+
+                  return _buildGridItem(context, items[index]['image']!, items[index]['label']!);
+                },
+                childCount: 8,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  // Menambahkan parameter context untuk Navigator
   Widget _buildGridItem(BuildContext context, String imagePath, String label) {
     return GestureDetector(
       onTap: () {
-        // Navigasi ke halaman QuestionScreen sesuai dengan label
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => QuestionScreen(subject: label), // Pindah ke QuestionScreen dengan subject
+            builder: (context) => QuestionScreen(subject: label),
           ),
         );
       },
@@ -86,9 +107,12 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              imagePath, // Mengganti ikon dengan gambar dari asset
-              width: 60, // Mengatur ukuran gambar
+              imagePath,
+              width: 60,
               height: 60,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(Icons.error, size: 60);
+              },
             ),
             const SizedBox(height: 10),
             Text(
