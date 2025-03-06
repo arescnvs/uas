@@ -8,7 +8,7 @@ void main() {
 }
 
 class BrainlyApp extends StatelessWidget {
-  const BrainlyApp({Key? key}) : super(key: key);
+  const BrainlyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

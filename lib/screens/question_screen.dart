@@ -439,7 +439,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     onAddAnswer: () => _navigateToCommentScreen(questions[index]),
                   );
                 } else {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
               },
             ),
@@ -452,7 +452,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     showMore = true;
                   });
                 },
-                child: Text('Show More Questions'),
+                child: const Text('Show More Questions'),
               ),
             ),
         ],

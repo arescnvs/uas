@@ -35,12 +35,12 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Text(
                 "505",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -111,7 +111,7 @@ class HomeScreen extends StatelessWidget {
               width: 60,
               height: 60,
               errorBuilder: (context, error, stackTrace) {
-                return Icon(Icons.error, size: 60);
+                return const Icon(Icons.error, size: 60);
               },
             ),
             const SizedBox(height: 10),

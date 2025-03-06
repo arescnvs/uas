@@ -30,6 +30,8 @@ environment:
 dependencies:
   sqflite: ^2.0.0+4
   path: ^1.8.3
+  widgetbook_annotation: ^3.3.0
+  widgetbook: ^3.11.0
   flutter:
     sdk: flutter
 
@@ -49,6 +51,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  widgetbook_generator: ^3.10.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
